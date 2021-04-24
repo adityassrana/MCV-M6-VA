@@ -9,17 +9,16 @@
 | Carmen García    | carmen.garciano@e-campus.uab.cat  |
 | Juan Chaves | juanvictor.chaves@e-campus.uab.cat |
 
-Project presentation: [Google Slides](https://docs.google.com/presentation/d/1FcZ90pkM3YXFWxmWFEbWw7z9L7LiFYNIy9Z9eVy9m_s/edit?usp=sharing)
+Link to Final Project presentation: [Google Slides](https://docs.google.com/presentation/d/1FcZ90pkM3YXFWxmWFEbWw7z9L7LiFYNIy9Z9eVy9m_s/edit?usp=sharing)
 
 # Index of contents
 The contents of this repository are structured following a temporal line throughout the 5 weekly tasks we have been working on.
 
-### [Week 1](#week1)  - Introduction to the project
-### [Week 2](#week2)  - Background estimation
-### [Week 3](#week3)  - Detection and Tracking
-### [Week 4](#week4)  - Optical flow, Video Stabilization and Tracking
-### [Week 5](#week5)  - Multi-target multi-camera Tracking
-
+### [Week 1](#week1)  - [Introduction to the project](https://docs.google.com/presentation/d/1kNpgATzLse7ZOE_rHp5N3c7yqyxgLaUbcgDiwzJ4isI/edit?usp=sharing)
+### [Week 2](#week2)  - [Background estimation](https://docs.google.com/presentation/d/1aV761QHabmQQitoXGatwK7zc4g2Yebu1JaH6rmS8xrg/edit?usp=sharing)
+### [Week 3](#week3)  - [Detection and Tracking](https://docs.google.com/presentation/d/10_nkRL2EFLIEEQEloHUi6XBRzcer_N9eBgKG--AvKks/edit#slide=id.p)
+### [Week 4](#week4)  - [Optical flow, Video Stabilization and Tracking](https://docs.google.com/presentation/d/1hCgceBehTA5_3Vs2I9-sR5rmQzM5iTKulkw-dRkpIDQ/edit?usp=sharing)
+### [Week 5](#week5)  - [Multi-target multi-camera Tracking](https://docs.google.com/presentation/d/1FcZ90pkM3YXFWxmWFEbWw7z9L7LiFYNIy9Z9eVy9m_s/edit?usp=sharing)
 
 # <a name="week1"></a> Week1
 
@@ -54,6 +53,48 @@ optional arguments:
 The tasks are implemented in jupyter notebooks with their corresponding name.
 
 
+# <a name="week2"/> Week 2
+
+## Runner
+All tasks were implemented in `main.py`. The algorithm will either pre-compute the background modelling or load it if it has already been computed before and saved in the `checkpoints` folder. The algorithm will output a .mp4 video file with the result and a gif of the first 200 frame for visualization purposes. The different algorithms can be selected by playing with the scripts parameters:
+
+## Sript Usage
+
+The models available include
+- GaussianModel -> 'gm'
+- AdaptiveGM -> 'agm'
+- SOTA -> 'sota', and select which one to use with "--method" argument to the parser
+
+````
+$ python week2/main.py -h
+usage: main.py [-h] [-m {gm,agm,sota}] [-c {gray,rgb,hsv,lab,ycrcb}] [-M MAX] [-perc PERCENTAGE] 
+               [-a N [N ...]] [-p P] [-d] [-meth {mog,mog2,lsbp,gmg,cnt,gsoc,knn}]
+
+Extract foreground from video.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m {gm,agm,sota}, --model {gm,agm,sota}
+                        The model used for background modeling. Default value is 'gm':Gaussian.
+  -c {gray,rgb,hsv,lab,ycrcb}, --colorspace {gray,rgb,hsv,lab,ycrcb}
+                        choose the colorspace used for background modeling. 
+                        Default value is 'gray.
+  -M MAX, --max MAX     max number of frames for which to extract foreground. 
+                        Set to '-1' by default, which means take all the frames available.
+  -perc PERCENTAGE, --percentage PERCENTAGE
+                        percentage of video to use for background modeling
+  -a N [N ...], --alpha N [N ...]
+                        alpha value or values depending on color space used for modelling
+  -p P, --p P           Rho (p): [AdaptiveGaussianModel] parameter controlling the inclusion 
+                        of new information to model
+  -d, --display         to display frames as they are processed
+  -meth {mog,mog2,lsbp,gmg,cnt,gsoc,knn}, --method {mog,mog2,lsbp,gmg,cnt,gsoc,knn}
+                        SOTA algorithm used for background subtraction. 
+                        The '--model' parameter has to be set to 'sota' to be able to use this.
+````
+
+## Random/Grid search
+There is a folder specific for this with the hyperparameters search runner and the visualizer of the results (3D plot). We did not have time to implement an usable interface for this script and the parameters to try are hardcoded inside the script, as well as the main function, which was copied from the main runner.
 
 # <a name="week3"/> <a name="w3"></a> Week 3
 
@@ -312,51 +353,6 @@ optional arguments:optional arguments:
 ````
 
 The txt file with the results will be stored for posterior evaluation. A video with the tracking visual results will also be generated.
-
-# <a name="week2"/> Week 2
-
-## Runner
-All tasks were implemented in `main.py`. The algorithm will either pre-compute the background modelling or load it if it has already been computed before and saved in the `checkpoints` folder. The algorithm will output a .mp4 video file with the result and a gif of the first 200 frame for visualization purposes. The different algorithms can be selected by playing with the scripts parameters:
-
-## Sript Usage
-
-The models available include
-- GaussianModel -> 'gm'
-- AdaptiveGM -> 'agm'
-- SOTA -> 'sota', and select which one to use with "--method" argument to the parser
-
-````
-$ python week2/main.py -h
-usage: main.py [-h] [-m {gm,agm,sota}] [-c {gray,rgb,hsv,lab,ycrcb}] [-M MAX] [-perc PERCENTAGE] 
-               [-a N [N ...]] [-p P] [-d] [-meth {mog,mog2,lsbp,gmg,cnt,gsoc,knn}]
-
-Extract foreground from video.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -m {gm,agm,sota}, --model {gm,agm,sota}
-                        The model used for background modeling. Default value is 'gm':Gaussian.
-  -c {gray,rgb,hsv,lab,ycrcb}, --colorspace {gray,rgb,hsv,lab,ycrcb}
-                        choose the colorspace used for background modeling. 
-                        Default value is 'gray.
-  -M MAX, --max MAX     max number of frames for which to extract foreground. 
-                        Set to '-1' by default, which means take all the frames available.
-  -perc PERCENTAGE, --percentage PERCENTAGE
-                        percentage of video to use for background modeling
-  -a N [N ...], --alpha N [N ...]
-                        alpha value or values depending on color space used for modelling
-  -p P, --p P           Rho (p): [AdaptiveGaussianModel] parameter controlling the inclusion 
-                        of new information to model
-  -d, --display         to display frames as they are processed
-  -meth {mog,mog2,lsbp,gmg,cnt,gsoc,knn}, --method {mog,mog2,lsbp,gmg,cnt,gsoc,knn}
-                        SOTA algorithm used for background subtraction. 
-                        The '--model' parameter has to be set to 'sota' to be able to use this.
-````
-
-## Random/Grid search
-There is a folder specific for this with the hyperparameters search runner and the visualizer of the results (3D plot). We did not have time to implement an usable interface for this script and the parameters to try are hardcoded inside the script, as well as the main function, which was copied from the main runner.
-
-
 
 # <a name="week5"/> Week 5
 
